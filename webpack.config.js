@@ -14,7 +14,7 @@ module.exports = {
   },
   module: {
     rules: [{
-//      enforce: 'pre',
+      enforce: 'pre',
       test: /\.js$/,
       exclude: /(node_modules|src\/utils\/extend\.js)/,
       loader: "eslint-loader"
