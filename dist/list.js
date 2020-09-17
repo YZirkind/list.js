@@ -3,52 +3,69 @@ var List =
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
-
+/******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
-
+/******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
 /******/ 			l: false,
 /******/ 			exports: {}
 /******/ 		};
-
+/******/
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-
+/******/
 /******/ 		// Flag the module as loaded
 /******/ 		module.l = true;
-
+/******/
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-
-
+/******/
+/******/
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
-
+/******/
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
-
-/******/ 	// identity function for calling harmony imports with the correct context
-/******/ 	__webpack_require__.i = function(value) { return value; };
-
+/******/
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, {
-/******/ 				configurable: false,
-/******/ 				enumerable: true,
-/******/ 				get: getter
-/******/ 			});
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
 /******/ 		}
 /******/ 	};
-
+/******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
+/******/ 	};
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -57,26 +74,71 @@ var List =
 /******/ 		__webpack_require__.d(getter, 'a', getter);
 /******/ 		return getter;
 /******/ 	};
-
+/******/
 /******/ 	// Object.prototype.hasOwnProperty.call
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-
+/******/
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "";
-
+/******/
+/******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 11);
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
+var bind = window.addEventListener ? 'addEventListener' : 'attachEvent',
+    unbind = window.removeEventListener ? 'removeEventListener' : 'detachEvent',
+    prefix = bind !== 'addEventListener' ? 'on' : '',
+    toArray = __webpack_require__(6);
+
+/**
+ * Bind `el` event `type` to `fn`.
+ *
+ * @param {Element} el, NodeList, HTMLCollection or Array
+ * @param {String} type
+ * @param {Function} fn
+ * @param {Boolean} capture
+ * @api public
+ */
+
+exports.bind = function(el, type, fn, capture){
+  el = toArray(el);
+  for ( var i = 0; i < el.length; i++ ) {
+    el[i][bind](prefix + type, fn, capture || false);
+  }
+};
+
+/**
+ * Unbind `el` event `type`'s callback `fn`.
+ *
+ * @param {Element} el, NodeList, HTMLCollection or Array
+ * @param {String} type
+ * @param {Function} fn
+ * @param {Boolean} capture
+ * @api public
+ */
+
+exports.unbind = function(el, type, fn, capture){
+  el = toArray(el);
+  for ( var i = 0; i < el.length; i++ ) {
+    el[i][unbind](prefix + type, fn, capture || false);
+  }
+};
+
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
 /**
  * Module dependencies.
  */
 
-var index = __webpack_require__(4);
+var index = __webpack_require__(5);
 
 /**
  * Whitespace regexp.
@@ -239,424 +301,25 @@ ClassList.prototype.contains = function(name){
 
 
 /***/ }),
-/* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var bind = window.addEventListener ? 'addEventListener' : 'attachEvent',
-    unbind = window.removeEventListener ? 'removeEventListener' : 'detachEvent',
-    prefix = bind !== 'addEventListener' ? 'on' : '',
-    toArray = __webpack_require__(5);
-
-/**
- * Bind `el` event `type` to `fn`.
- *
- * @param {Element} el, NodeList, HTMLCollection or Array
- * @param {String} type
- * @param {Function} fn
- * @param {Boolean} capture
- * @api public
- */
-
-exports.bind = function(el, type, fn, capture){
-  el = toArray(el);
-  for ( var i = 0; i < el.length; i++ ) {
-    el[i][bind](prefix + type, fn, capture || false);
-  }
-};
-
-/**
- * Unbind `el` event `type`'s callback `fn`.
- *
- * @param {Element} el, NodeList, HTMLCollection or Array
- * @param {String} type
- * @param {Function} fn
- * @param {Boolean} capture
- * @api public
- */
-
-exports.unbind = function(el, type, fn, capture){
-  el = toArray(el);
-  for ( var i = 0; i < el.length; i++ ) {
-    el[i][unbind](prefix + type, fn, capture || false);
-  }
-};
-
-
-/***/ }),
 /* 2 */
-/***/ (function(module, exports) {
-
-module.exports = function(list) {
-  return function(initValues, element, notCreate) {
-    var item = this;
-
-    this._values = {};
-
-    this.found = false; // Show if list.searched == true and this.found == true
-    this.filtered = false;// Show if list.filtered == true and this.filtered == true
-
-    var init = function(initValues, element, notCreate) {
-      if (element === undefined) {
-        if (notCreate) {
-          item.values(initValues, notCreate);
-        } else {
-          item.values(initValues);
-        }
-      } else {
-        item.elm = element;
-        var values = list.templater.get(item, initValues);
-        item.values(values);
-      }
-    };
-
-    this.values = function(newValues, notCreate) {
-      if (newValues !== undefined) {
-        for(var name in newValues) {
-          item._values[name] = newValues[name];
-        }
-        if (notCreate !== true) {
-          list.templater.set(item, item.values());
-        }
-      } else {
-        return item._values;
-      }
-    };
-
-    this.show = function() {
-      list.templater.show(item);
-    };
-
-    this.hide = function() {
-      list.templater.hide(item);
-    };
-
-    this.matching = function() {
-      return (
-        (list.filtered && list.searched && item.found && item.filtered) ||
-        (list.filtered && !list.searched && item.filtered) ||
-        (!list.filtered && list.searched && item.found) ||
-        (!list.filtered && !list.searched)
-      );
-    };
-
-    this.visible = function() {
-      return (item.elm && (item.elm.parentNode == list.list)) ? true : false;
-    };
-
-    init(initValues, element, notCreate);
-  };
-};
-
-
-/***/ }),
-/* 3 */
-/***/ (function(module, exports) {
-
-/**
- * A cross-browser implementation of getElementsByClass.
- * Heavily based on Dustin Diaz's function: http://dustindiaz.com/getelementsbyclass.
- *
- * Find all elements with class `className` inside `container`.
- * Use `single = true` to increase performance in older browsers
- * when only one element is needed.
- *
- * @param {String} className
- * @param {Element} container
- * @param {Boolean} single
- * @api public
- */
-
-var getElementsByClassName = function(container, className, single) {
-  if (single) {
-    return container.getElementsByClassName(className)[0];
-  } else {
-    return container.getElementsByClassName(className);
-  }
-};
-
-var querySelector = function(container, className, single) {
-  className = '.' + className;
-  if (single) {
-    return container.querySelector(className);
-  } else {
-    return container.querySelectorAll(className);
-  }
-};
-
-var polyfill = function(container, className, single) {
-  var classElements = [],
-    tag = '*';
-
-  var els = container.getElementsByTagName(tag);
-  var elsLen = els.length;
-  var pattern = new RegExp("(^|\\s)"+className+"(\\s|$)");
-  for (var i = 0, j = 0; i < elsLen; i++) {
-    if ( pattern.test(els[i].className) ) {
-      if (single) {
-        return els[i];
-      } else {
-        classElements[j] = els[i];
-        j++;
-      }
-    }
-  }
-  return classElements;
-};
-
-module.exports = (function() {
-  return function(container, className, single, options) {
-    options = options || {};
-    if ((options.test && options.getElementsByClassName) || (!options.test && document.getElementsByClassName)) {
-      return getElementsByClassName(container, className, single);
-    } else if ((options.test && options.querySelector) || (!options.test && document.querySelector)) {
-      return querySelector(container, className, single);
-    } else {
-      return polyfill(container, className, single);
-    }
-  };
-})();
-
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports) {
-
-var indexOf = [].indexOf;
-
-module.exports = function(arr, obj){
-  if (indexOf) return arr.indexOf(obj);
-  for (var i = 0; i < arr.length; ++i) {
-    if (arr[i] === obj) return i;
-  }
-  return -1;
-};
-
-
-/***/ }),
-/* 5 */
-/***/ (function(module, exports) {
-
-/**
- * Source: https://github.com/timoxley/to-array
- *
- * Convert an array-like object into an `Array`.
- * If `collection` is already an `Array`, then will return a clone of `collection`.
- *
- * @param {Array | Mixed} collection An `Array` or array-like object to convert e.g. `arguments` or `NodeList`
- * @return {Array} Naive conversion of `collection` to a new `Array`.
- * @api public
- */
-
-module.exports = function toArray(collection) {
-  if (typeof collection === 'undefined') return [];
-  if (collection === null) return [null];
-  if (collection === window) return [window];
-  if (typeof collection === 'string') return [collection];
-  if (isArray(collection)) return collection;
-  if (typeof collection.length != 'number') return [collection];
-  if (typeof collection === 'function' && collection instanceof Function) return [collection];
-
-  var arr = [];
-  for (var i = 0; i < collection.length; i++) {
-    if (Object.prototype.hasOwnProperty.call(collection, i) || i in collection) {
-      arr.push(collection[i]);
-    }
-  }
-  if (!arr.length) return [];
-  return arr;
-};
-
-function isArray(arr) {
-  return Object.prototype.toString.call(arr) === "[object Array]";
-}
-
-
-/***/ }),
-/* 6 */
-/***/ (function(module, exports) {
-
-module.exports = function(s) {
-  s = (s === undefined) ? "" : s;
-  s = (s === null) ? "" : s;
-  s = s.toString();
-  return s;
-};
-
-
-/***/ }),
-/* 7 */
-/***/ (function(module, exports) {
-
-/*
- * Source: https://github.com/segmentio/extend
- */
-
-module.exports = function extend (object) {
-    // Takes an unlimited number of extenders.
-    var args = Array.prototype.slice.call(arguments, 1);
-
-    // For each extender, copy their properties on our object.
-    for (var i = 0, source; source = args[i]; i++) {
-        if (!source) continue;
-        for (var property in source) {
-            object[property] = source[property];
-        }
-    }
-
-    return object;
-};
-
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports) {
-
-module.exports = function(list) {
-  var addAsync = function(values, callback, items) {
-    var valuesToAdd = values.splice(0, 50);
-    items = items || [];
-    items = items.concat(list.add(valuesToAdd));
-    if (values.length > 0) {
-      setTimeout(function() {
-        addAsync(values, callback, items);
-      }, 1);
-    } else {
-      list.update();
-      callback(items);
-    }
-  };
-  return addAsync;
-};
-
-
-/***/ }),
-/* 9 */
-/***/ (function(module, exports) {
-
-module.exports = function(list) {
-
-  // Add handlers
-  list.handlers.filterStart = list.handlers.filterStart || [];
-  list.handlers.filterComplete = list.handlers.filterComplete || [];
-
-  return function(filterFunction) {
-    list.trigger('filterStart');
-    list.i = 1; // Reset paging
-    list.reset.filter();
-    if (filterFunction === undefined) {
-      list.filtered = false;
-    } else {
-      list.filtered = true;
-      var is = list.items;
-      for (var i = 0, il = is.length; i < il; i++) {
-        var item = is[i];
-        if (filterFunction(item)) {
-          item.filtered = true;
-        } else {
-          item.filtered = false;
-        }
-      }
-    }
-    list.update();
-    list.trigger('filterComplete');
-    return list.visibleItems;
-  };
-};
-
-
-/***/ }),
-/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
-
-var classes = __webpack_require__(0),
-  events = __webpack_require__(1),
-  extend = __webpack_require__(7),
-  toString = __webpack_require__(6),
+var naturalSort = __webpack_require__(9),
   getByClass = __webpack_require__(3),
-  fuzzy = __webpack_require__(19);
-
-module.exports = function(list, options) {
-  options = options || {};
-
-  options = extend({
-    location: 0,
-    distance: 100,
-    threshold: 0.4,
-    multiSearch: true,
-    searchClass: 'fuzzy-search'
-  }, options);
-
-
-
-  var fuzzySearch = {
-    search: function(searchString, columns) {
-      // Substract arguments from the searchString or put searchString as only argument
-      var searchArguments = options.multiSearch ? searchString.replace(/ +$/, '').split(/ +/) : [searchString];
-
-      for (var k = 0, kl = list.items.length; k < kl; k++) {
-        fuzzySearch.item(list.items[k], columns, searchArguments);
-      }
-    },
-    item: function(item, columns, searchArguments) {
-      var found = true;
-      for(var i = 0; i < searchArguments.length; i++) {
-        var foundArgument = false;
-        for (var j = 0, jl = columns.length; j < jl; j++) {
-          if (fuzzySearch.values(item.values(), columns[j], searchArguments[i])) {
-            foundArgument = true;
-          }
-        }
-        if(!foundArgument) {
-          found = false;
-        }
-      }
-      item.found = found;
-    },
-    values: function(values, value, searchArgument) {
-      if (values.hasOwnProperty(value)) {
-        var text = toString(values[value]).toLowerCase();
-
-        if (fuzzy(text, searchArgument, options)) {
-          return true;
-        }
-      }
-      return false;
-    }
-  };
-
-
-  events.bind(getByClass(list.listContainer, options.searchClass), 'keyup', function(e) {
-    var target = e.target || e.srcElement; // IE have srcElement
-    list.search(target.value, fuzzySearch.search);
-  });
-
-  return function(str, columns) {
-    list.search(str, columns, fuzzySearch.search);
-  };
-};
-
-
-/***/ }),
-/* 11 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var naturalSort = __webpack_require__(18),
-  getByClass = __webpack_require__(3),
-  extend = __webpack_require__(7),
-  indexOf = __webpack_require__(4),
-  events = __webpack_require__(1),
-  toString = __webpack_require__(6),
-  classes = __webpack_require__(0),
-  getAttribute = __webpack_require__(17),
-  toArray = __webpack_require__(5);
+  extend = __webpack_require__(4),
+  indexOf = __webpack_require__(5),
+  events = __webpack_require__(0),
+  toString = __webpack_require__(7),
+  classes = __webpack_require__(1),
+  getAttribute = __webpack_require__(10),
+  toArray = __webpack_require__(6);
 
 module.exports = function(id, options, values) {
 
   var self = this,
     init,
-    Item = __webpack_require__(2)(self),
-    addAsync = __webpack_require__(8)(self),
+    Item = __webpack_require__(8)(self),
+    addAsync = __webpack_require__(11)(self),
     initPagination = __webpack_require__(12)(self);
 
   init = {
@@ -693,11 +356,11 @@ module.exports = function(id, options, values) {
       self.list       = getByClass(self.listContainer, self.listClass, true);
 
       self.parse        = __webpack_require__(13)(self);
-      self.templater    = __webpack_require__(16)(self);
-      self.search       = __webpack_require__(14)(self);
-      self.filter       = __webpack_require__(9)(self);
-      self.sort         = __webpack_require__(15)(self);
-      self.fuzzySearch  = __webpack_require__(10)(self, options.fuzzySearch);
+      self.templater    = __webpack_require__(14)(self);
+      self.search       = __webpack_require__(15)(self);
+      self.filter       = __webpack_require__(16)(self);
+      self.sort         = __webpack_require__(17)(self);
+      self.fuzzySearch  = __webpack_require__(18)(self, options.fuzzySearch);
 
       this.handlers();
       this.items();
@@ -906,16 +569,435 @@ module.exports = function(id, options, values) {
 
 
 /***/ }),
+/* 3 */
+/***/ (function(module, exports) {
+
+/**
+ * A cross-browser implementation of getElementsByClass.
+ * Heavily based on Dustin Diaz's function: http://dustindiaz.com/getelementsbyclass.
+ *
+ * Find all elements with class `className` inside `container`.
+ * Use `single = true` to increase performance in older browsers
+ * when only one element is needed.
+ *
+ * @param {String} className
+ * @param {Element} container
+ * @param {Boolean} single
+ * @api public
+ */
+
+var getElementsByClassName = function(container, className, single) {
+  if (single) {
+    return container.getElementsByClassName(className)[0];
+  } else {
+    return container.getElementsByClassName(className);
+  }
+};
+
+var querySelector = function(container, className, single) {
+  className = '.' + className;
+  if (single) {
+    return container.querySelector(className);
+  } else {
+    return container.querySelectorAll(className);
+  }
+};
+
+var polyfill = function(container, className, single) {
+  var classElements = [],
+    tag = '*';
+
+  var els = container.getElementsByTagName(tag);
+  var elsLen = els.length;
+  var pattern = new RegExp("(^|\\s)"+className+"(\\s|$)");
+  for (var i = 0, j = 0; i < elsLen; i++) {
+    if ( pattern.test(els[i].className) ) {
+      if (single) {
+        return els[i];
+      } else {
+        classElements[j] = els[i];
+        j++;
+      }
+    }
+  }
+  return classElements;
+};
+
+module.exports = (function() {
+  return function(container, className, single, options) {
+    options = options || {};
+    if ((options.test && options.getElementsByClassName) || (!options.test && document.getElementsByClassName)) {
+      return getElementsByClassName(container, className, single);
+    } else if ((options.test && options.querySelector) || (!options.test && document.querySelector)) {
+      return querySelector(container, className, single);
+    } else {
+      return polyfill(container, className, single);
+    }
+  };
+})();
+
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports) {
+
+/*
+ * Source: https://github.com/segmentio/extend
+ */
+
+module.exports = function extend (object) {
+    // Takes an unlimited number of extenders.
+    var args = Array.prototype.slice.call(arguments, 1);
+
+    // For each extender, copy their properties on our object.
+    for (var i = 0, source; source = args[i]; i++) {
+        if (!source) continue;
+        for (var property in source) {
+            object[property] = source[property];
+        }
+    }
+
+    return object;
+};
+
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports) {
+
+var indexOf = [].indexOf;
+
+module.exports = function(arr, obj){
+  if (indexOf) return arr.indexOf(obj);
+  for (var i = 0; i < arr.length; ++i) {
+    if (arr[i] === obj) return i;
+  }
+  return -1;
+};
+
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports) {
+
+/**
+ * Source: https://github.com/timoxley/to-array
+ *
+ * Convert an array-like object into an `Array`.
+ * If `collection` is already an `Array`, then will return a clone of `collection`.
+ *
+ * @param {Array | Mixed} collection An `Array` or array-like object to convert e.g. `arguments` or `NodeList`
+ * @return {Array} Naive conversion of `collection` to a new `Array`.
+ * @api public
+ */
+
+module.exports = function toArray(collection) {
+  if (typeof collection === 'undefined') return [];
+  if (collection === null) return [null];
+  if (collection === window) return [window];
+  if (typeof collection === 'string') return [collection];
+  if (isArray(collection)) return collection;
+  if (typeof collection.length != 'number') return [collection];
+  if (typeof collection === 'function' && collection instanceof Function) return [collection];
+
+  var arr = [];
+  for (var i = 0; i < collection.length; i++) {
+    if (Object.prototype.hasOwnProperty.call(collection, i) || i in collection) {
+      arr.push(collection[i]);
+    }
+  }
+  if (!arr.length) return [];
+  return arr;
+};
+
+function isArray(arr) {
+  return Object.prototype.toString.call(arr) === "[object Array]";
+}
+
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports) {
+
+module.exports = function(s) {
+  s = (s === undefined) ? "" : s;
+  s = (s === null) ? "" : s;
+  s = s.toString();
+  return s;
+};
+
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports) {
+
+module.exports = function(list) {
+  return function(initValues, element, notCreate) {
+    var item = this;
+
+    this._values = {};
+
+    this.found = false; // Show if list.searched == true and this.found == true
+    this.filtered = false;// Show if list.filtered == true and this.filtered == true
+
+    var init = function(initValues, element, notCreate) {
+      if (element === undefined) {
+        if (notCreate) {
+          item.values(initValues, notCreate);
+        } else {
+          item.values(initValues);
+        }
+      } else {
+        item.elm = element;
+        var values = list.templater.get(item, initValues);
+        item.values(values);
+      }
+    };
+
+    this.values = function(newValues, notCreate) {
+      if (newValues !== undefined) {
+        for(var name in newValues) {
+          item._values[name] = newValues[name];
+        }
+        if (notCreate !== true) {
+          list.templater.set(item, item.values());
+        }
+      } else {
+        return item._values;
+      }
+    };
+
+    this.show = function() {
+      list.templater.show(item);
+    };
+
+    this.hide = function() {
+      list.templater.hide(item);
+    };
+
+    this.matching = function() {
+      return (
+        (list.filtered && list.searched && item.found && item.filtered) ||
+        (list.filtered && !list.searched && item.filtered) ||
+        (!list.filtered && list.searched && item.found) ||
+        (!list.filtered && !list.searched)
+      );
+    };
+
+    this.visible = function() {
+      return (item.elm && (item.elm.parentNode == list.list)) ? true : false;
+    };
+
+    init(initValues, element, notCreate);
+  };
+};
+
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var alphabet;
+var alphabetIndexMap;
+var alphabetIndexMapLength = 0;
+
+function isNumberCode(code) {
+  return code >= 48 && code <= 57;
+}
+
+function naturalCompare(a, b) {
+  var lengthA = (a += '').length;
+  var lengthB = (b += '').length;
+  var aIndex = 0;
+  var bIndex = 0;
+
+  while (aIndex < lengthA && bIndex < lengthB) {
+    var charCodeA = a.charCodeAt(aIndex);
+    var charCodeB = b.charCodeAt(bIndex);
+
+    if (isNumberCode(charCodeA)) {
+      if (!isNumberCode(charCodeB)) {
+        return charCodeA - charCodeB;
+      }
+
+      var numStartA = aIndex;
+      var numStartB = bIndex;
+
+      while (charCodeA === 48 && ++numStartA < lengthA) {
+        charCodeA = a.charCodeAt(numStartA);
+      }
+      while (charCodeB === 48 && ++numStartB < lengthB) {
+        charCodeB = b.charCodeAt(numStartB);
+      }
+
+      var numEndA = numStartA;
+      var numEndB = numStartB;
+
+      while (numEndA < lengthA && isNumberCode(a.charCodeAt(numEndA))) {
+        ++numEndA;
+      }
+      while (numEndB < lengthB && isNumberCode(b.charCodeAt(numEndB))) {
+        ++numEndB;
+      }
+
+      var difference = numEndA - numStartA - numEndB + numStartB; // numA length - numB length
+      if (difference) {
+        return difference;
+      }
+
+      while (numStartA < numEndA) {
+        difference = a.charCodeAt(numStartA++) - b.charCodeAt(numStartB++);
+        if (difference) {
+          return difference;
+        }
+      }
+
+      aIndex = numEndA;
+      bIndex = numEndB;
+      continue;
+    }
+
+    if (charCodeA !== charCodeB) {
+      if (
+        charCodeA < alphabetIndexMapLength &&
+        charCodeB < alphabetIndexMapLength &&
+        alphabetIndexMap[charCodeA] !== -1 &&
+        alphabetIndexMap[charCodeB] !== -1
+      ) {
+        return alphabetIndexMap[charCodeA] - alphabetIndexMap[charCodeB];
+      }
+
+      return charCodeA - charCodeB;
+    }
+
+    ++aIndex;
+    ++bIndex;
+  }
+
+  if (aIndex >= lengthA && bIndex < lengthB && lengthA >= lengthB) {
+    return -1;
+  }
+
+  if (bIndex >= lengthB && aIndex < lengthA && lengthB >= lengthA) {
+    return 1;
+  }
+
+  return lengthA - lengthB;
+}
+
+naturalCompare.caseInsensitive = naturalCompare.i = function(a, b) {
+  return naturalCompare(('' + a).toLowerCase(), ('' + b).toLowerCase());
+};
+
+Object.defineProperties(naturalCompare, {
+  alphabet: {
+    get: function() {
+      return alphabet;
+    },
+
+    set: function(value) {
+      alphabet = value;
+      alphabetIndexMap = [];
+
+      var i = 0;
+
+      if (alphabet) {
+        for (; i < alphabet.length; i++) {
+          alphabetIndexMap[alphabet.charCodeAt(i)] = i;
+        }
+      }
+
+      alphabetIndexMapLength = alphabetIndexMap.length;
+
+      for (i = 0; i < alphabetIndexMapLength; i++) {
+        if (alphabetIndexMap[i] === undefined) {
+          alphabetIndexMap[i] = -1;
+        }
+      }
+    },
+  },
+});
+
+module.exports = naturalCompare;
+
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports) {
+
+/**
+ * A cross-browser implementation of getAttribute.
+ * Source found here: http://stackoverflow.com/a/3755343/361337 written by Vivin Paliath
+ *
+ * Return the value for `attr` at `element`.
+ *
+ * @param {Element} el
+ * @param {String} attr
+ * @api public
+ */
+
+module.exports = function(el, attr) {
+  var result = (el.getAttribute && el.getAttribute(attr)) || null;
+  if( !result ) {
+    var attrs = el.attributes;
+    var length = attrs.length;
+    for(var i = 0; i < length; i++) {
+      if (attr[i] !== undefined) {
+        if(attr[i].nodeName === attr) {
+          result = attr[i].nodeValue;
+        }
+      }
+    }
+  }
+  return result;
+};
+
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports) {
+
+module.exports = function(list) {
+  var addAsync = function(values, callback, items) {
+    var valuesToAdd = values.splice(0, 50);
+    items = items || [];
+    items = items.concat(list.add(valuesToAdd));
+    if (values.length > 0) {
+      setTimeout(function() {
+        addAsync(values, callback, items);
+      }, 1);
+    } else {
+      list.update();
+      callback(items);
+    }
+  };
+  return addAsync;
+};
+
+
+/***/ }),
 /* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var classes = __webpack_require__(0),
-  events = __webpack_require__(1),
-  List = __webpack_require__(11);
+var classes = __webpack_require__(1),
+  events = __webpack_require__(0),
+  List = __webpack_require__(2);
 
 module.exports = function(list) {
+  var isHidden = false;
 
   var refresh = function(pagingList, options) {
+    if (list.page < 1) {
+      list.listContainer.style.display = 'none';
+      isHidden = true;
+      return;
+    } else if (isHidden){
+      list.listContainer.style.display = 'block';
+    }
+
     var item,
       l = list.matchingItems.length,
       index = list.i,
@@ -927,7 +1009,6 @@ module.exports = function(list) {
       right = options.right || options.outerWindow || 0;
 
     right = pages - right;
-
     pagingList.clear();
     for (var i = 1; i <= pages; i++) {
       var className = (currentPage === i) ? "active" : "";
@@ -942,7 +1023,8 @@ module.exports = function(list) {
         if (className) {
           classes(item.elm).add(className);
         }
-        addEvent(item.elm, i, page);
+        item.elm.firstChild.setAttribute('data-i', i);
+        item.elm.firstChild.setAttribute('data-page', page);
       } else if (is.dotted(pagingList, i, left, right, currentPage, innerWindow, pagingList.size())) {
         item = pagingList.add({
           page: "...",
@@ -981,19 +1063,22 @@ module.exports = function(list) {
     }
   };
 
-  var addEvent = function(elm, i, page) {
-     events.bind(elm, 'click', function() {
-       list.show((i-1)*page + 1, page);
-     });
-  };
-
   return function(options) {
     var pagingList = new List(list.listContainer.id, {
       listClass: options.paginationClass || 'pagination',
-      item: "<li><a class='page' href='javascript:function Z(){Z=\"\"}Z()'></a></li>",
+      item: "<li><a class='page' href='#'></a></li>",
       valueNames: ['page', 'dotted'],
       searchClass: 'pagination-search-that-is-not-supposed-to-exist',
       sortClass: 'pagination-sort-that-is-not-supposed-to-exist'
+    });
+
+    events.bind(pagingList.listContainer, 'click', function(e) {
+      var target = e.target || e.srcElement
+        , page = list.utils.getAttribute(target, 'data-page')
+        , i = list.utils.getAttribute(target, 'data-i');
+      if(i){      
+        list.show((i-1)*page + 1, page);
+      }
     });
 
     list.on('updated', function() {
@@ -1010,7 +1095,7 @@ module.exports = function(list) {
 
 module.exports = function(list) {
 
-  var Item = __webpack_require__(2)(list);
+  var Item = __webpack_require__(8)(list);
 
   var getChildren = function(parent) {
     var nodes = parent.childNodes,
@@ -1059,244 +1144,6 @@ module.exports = function(list) {
 
 /***/ }),
 /* 14 */
-/***/ (function(module, exports) {
-
-module.exports = function(list) {
-  var item,
-    text,
-    columns,
-    searchString,
-    customSearch;
-
-  var prepare = {
-    resetList: function() {
-      list.i = 1;
-      list.templater.clear();
-      customSearch = undefined;
-    },
-    setOptions: function(args) {
-      if (args.length == 2 && args[1] instanceof Array) {
-        columns = args[1];
-      } else if (args.length == 2 && typeof(args[1]) == "function") {
-        columns = undefined;
-        customSearch = args[1];
-      } else if (args.length == 3) {
-        columns = args[1];
-        customSearch = args[2];
-      } else {
-        columns = undefined;
-      }
-    },
-    setColumns: function() {
-      if (list.items.length === 0) return;
-      if (columns === undefined) {
-        columns = (list.searchColumns === undefined) ? prepare.toArray(list.items[0].values()) : list.searchColumns;
-      }
-    },
-    setSearchString: function(s) {
-      s = list.utils.toString(s).toLowerCase();
-      s = s.replace(/[-[\]{}()*+?.,\\^$|#]/g, "\\$&"); // Escape regular expression characters
-      searchString = s;
-    },
-    toArray: function(values) {
-      var tmpColumn = [];
-      for (var name in values) {
-        tmpColumn.push(name);
-      }
-      return tmpColumn;
-    }
-  };
-  var search = {
-    list: function() {
-      for (var k = 0, kl = list.items.length; k < kl; k++) {
-        search.item(list.items[k]);
-      }
-    },
-    item: function(item) {
-      item.found = false;
-      for (var j = 0, jl = columns.length; j < jl; j++) {
-        if (search.values(item.values(), columns[j])) {
-          item.found = true;
-          return;
-        }
-      }
-    },
-    values: function(values, column) {
-      if (values.hasOwnProperty(column)) {
-        text = list.utils.toString(values[column]).toLowerCase();
-        if ((searchString !== "") && (text.search(searchString) > -1)) {
-          return true;
-        }
-      }
-      return false;
-    },
-    reset: function() {
-      list.reset.search();
-      list.searched = false;
-    }
-  };
-
-  var searchMethod = function(str) {
-    list.trigger('searchStart');
-
-    prepare.resetList();
-    prepare.setSearchString(str);
-    prepare.setOptions(arguments); // str, cols|searchFunction, searchFunction
-    prepare.setColumns();
-
-    if (searchString === "" ) {
-      search.reset();
-    } else {
-      list.searched = true;
-      if (customSearch) {
-        customSearch(searchString, columns);
-      } else {
-        search.list();
-      }
-    }
-
-    list.update();
-    list.trigger('searchComplete');
-    return list.visibleItems;
-  };
-
-  list.handlers.searchStart = list.handlers.searchStart || [];
-  list.handlers.searchComplete = list.handlers.searchComplete || [];
-
-  list.utils.events.bind(list.utils.getByClass(list.listContainer, list.searchClass), 'keyup', function(e) {
-    var target = e.target || e.srcElement, // IE have srcElement
-      alreadyCleared = (target.value === "" && !list.searched);
-    if (!alreadyCleared) { // If oninput already have resetted the list, do nothing
-      searchMethod(target.value);
-    }
-  });
-
-  // Used to detect click on HTML5 clear button
-  list.utils.events.bind(list.utils.getByClass(list.listContainer, list.searchClass), 'input', function(e) {
-    var target = e.target || e.srcElement;
-    if (target.value === "") {
-      searchMethod('');
-    }
-  });
-
-  return searchMethod;
-};
-
-
-/***/ }),
-/* 15 */
-/***/ (function(module, exports) {
-
-module.exports = function(list) {
-
-  var buttons = {
-    els: undefined,
-    clear: function() {
-      for (var i = 0, il = buttons.els.length; i < il; i++) {
-        list.utils.classes(buttons.els[i]).remove('asc');
-        list.utils.classes(buttons.els[i]).remove('desc');
-      }
-    },
-    getOrder: function(btn) {
-      var predefinedOrder = list.utils.getAttribute(btn, 'data-order');
-      if (predefinedOrder == "asc" || predefinedOrder == "desc") {
-        return predefinedOrder;
-      } else if (list.utils.classes(btn).has('desc')) {
-        return "asc";
-      } else if (list.utils.classes(btn).has('asc')) {
-        return "desc";
-      } else {
-        return "asc";
-      }
-    },
-    getInSensitive: function(btn, options) {
-      var insensitive = list.utils.getAttribute(btn, 'data-insensitive');
-      if (insensitive === "false") {
-        options.insensitive = false;
-      } else {
-        options.insensitive = true;
-      }
-    },
-    setOrder: function(options) {
-      for (var i = 0, il = buttons.els.length; i < il; i++) {
-        var btn = buttons.els[i];
-        if (list.utils.getAttribute(btn, 'data-sort') !== options.valueName) {
-          continue;
-        }
-        var predefinedOrder = list.utils.getAttribute(btn, 'data-order');
-        if (predefinedOrder == "asc" || predefinedOrder == "desc") {
-          if (predefinedOrder == options.order) {
-            list.utils.classes(btn).add(options.order);
-          }
-        } else {
-          list.utils.classes(btn).add(options.order);
-        }
-      }
-    }
-  };
-
-  var sort = function() {
-    list.trigger('sortStart');
-    var options = {};
-
-    var target = arguments[0].currentTarget || arguments[0].srcElement || undefined;
-
-    if (target) {
-      options.valueName = list.utils.getAttribute(target, 'data-sort');
-      buttons.getInSensitive(target, options);
-      options.order = buttons.getOrder(target);
-    } else {
-      options = arguments[1] || options;
-      options.valueName = arguments[0];
-      options.order = options.order || "asc";
-      options.insensitive = (typeof options.insensitive == "undefined") ? true : options.insensitive;
-    }
-
-    buttons.clear();
-    buttons.setOrder(options);
-
-
-    // caseInsensitive
-    // alphabet
-    var customSortFunction = (options.sortFunction || list.sortFunction || null),
-        multi = ((options.order === 'desc') ? -1 : 1),
-        sortFunction;
-
-    if (customSortFunction) {
-      sortFunction = function(itemA, itemB) {
-        return customSortFunction(itemA, itemB, options) * multi;
-      };
-    } else {
-      sortFunction = function(itemA, itemB) {
-        var sort = list.utils.naturalSort;
-        sort.alphabet = list.alphabet || options.alphabet || undefined;
-        if (!sort.alphabet && options.insensitive) {
-          sort = list.utils.naturalSort.caseInsensitive;
-        }
-        return sort(itemA.values()[options.valueName], itemB.values()[options.valueName]) * multi;
-      };
-    }
-
-    list.items.sort(sortFunction);
-    list.update();
-    list.trigger('sortComplete');
-  };
-
-  // Add handlers
-  list.handlers.sortStart = list.handlers.sortStart || [];
-  list.handlers.sortComplete = list.handlers.sortComplete || [];
-
-  buttons.els = list.utils.getByClass(list.listContainer, list.sortClass);
-  list.utils.events.bind(buttons.els, 'click', sort);
-  list.on('searchStart', buttons.clear);
-  list.on('filterStart', buttons.clear);
-
-  return sort;
-};
-
-
-/***/ }),
-/* 16 */
 /***/ (function(module, exports) {
 
 var Templater = function(list) {
@@ -1433,7 +1280,7 @@ var Templater = function(list) {
       return false;
     }
     if (itemSource === undefined) {
-      throw new Error("The list need to have at list one item on init otherwise you'll have to add a template.");
+      throw new Error("The list needs to have at least one item on init otherwise you'll have to add a template.");
     }
     /* If item source does not exists, use the first item in list as
     source for new items */
@@ -1476,34 +1323,275 @@ module.exports = function(list) {
 
 
 /***/ }),
-/* 17 */
+/* 15 */
 /***/ (function(module, exports) {
 
-/**
- * A cross-browser implementation of getAttribute.
- * Source found here: http://stackoverflow.com/a/3755343/361337 written by Vivin Paliath
- *
- * Return the value for `attr` at `element`.
- *
- * @param {Element} el
- * @param {String} attr
- * @api public
- */
+module.exports = function(list) {
+  var item,
+    text,
+    columns,
+    searchString,
+    customSearch;
 
-module.exports = function(el, attr) {
-  var result = (el.getAttribute && el.getAttribute(attr)) || null;
-  if( !result ) {
-    var attrs = el.attributes;
-    var length = attrs.length;
-    for(var i = 0; i < length; i++) {
-      if (attr[i] !== undefined) {
-        if(attr[i].nodeName === attr) {
-          result = attr[i].nodeValue;
+  var prepare = {
+    resetList: function() {
+      list.i = 1;
+      list.templater.clear();
+      customSearch = undefined;
+    },
+    setOptions: function(args) {
+      if (args.length == 2 && args[1] instanceof Array) {
+        columns = args[1];
+      } else if (args.length == 2 && typeof(args[1]) == "function") {
+        columns = undefined;
+        customSearch = args[1];
+      } else if (args.length == 3) {
+        columns = args[1];
+        customSearch = args[2];
+      } else {
+        columns = undefined;
+      }
+    },
+    setColumns: function() {
+      if (list.items.length === 0) return;
+      if (columns === undefined) {
+        columns = (list.searchColumns === undefined) ? prepare.toArray(list.items[0].values()) : list.searchColumns;
+      }
+    },
+    setSearchString: function(s) {
+      s = list.utils.toString(s).toLowerCase();
+      s = s.replace(/[-[\]{}()*+?.,\\^$|#]/g, "\\$&"); // Escape regular expression characters
+      searchString = s;
+    },
+    toArray: function(values) {
+      var tmpColumn = [];
+      for (var name in values) {
+        tmpColumn.push(name);
+      }
+      return tmpColumn;
+    }
+  };
+  var search = {
+    list: function() {
+      for (var k = 0, kl = list.items.length; k < kl; k++) {
+        search.item(list.items[k]);
+      }
+    },
+    item: function(item) {
+      item.found = false;
+      for (var j = 0, jl = columns.length; j < jl; j++) {
+        if (search.values(item.values(), columns[j])) {
+          item.found = true;
+          return;
+        }
+      }
+    },
+    values: function(values, column) {
+      if (values.hasOwnProperty(column)) {
+        text = list.utils.toString(values[column]).toLowerCase();
+        if ((searchString !== "") && (text.search(searchString) > -1)) {
+          return true;
+        }
+      }
+      return false;
+    },
+    reset: function() {
+      list.reset.search();
+      list.searched = false;
+    }
+  };
+
+  var searchMethod = function(str) {
+    list.trigger('searchStart');
+
+    prepare.resetList();
+    prepare.setSearchString(str);
+    prepare.setOptions(arguments); // str, cols|searchFunction, searchFunction
+    prepare.setColumns();
+
+    if (searchString === "" ) {
+      search.reset();
+    } else {
+      list.searched = true;
+      if (customSearch) {
+        customSearch(searchString, columns);
+      } else {
+        search.list();
+      }
+    }
+
+    list.update();
+    list.trigger('searchComplete');
+    return list.visibleItems;
+  };
+
+  list.handlers.searchStart = list.handlers.searchStart || [];
+  list.handlers.searchComplete = list.handlers.searchComplete || [];
+
+  list.utils.events.bind(list.utils.getByClass(list.listContainer, list.searchClass), 'keyup', function(e) {
+    var target = e.target || e.srcElement, // IE have srcElement
+      alreadyCleared = (target.value === "" && !list.searched);
+    if (!alreadyCleared) { // If oninput already have resetted the list, do nothing
+      searchMethod(target.value);
+    }
+  });
+
+  // Used to detect click on HTML5 clear button
+  list.utils.events.bind(list.utils.getByClass(list.listContainer, list.searchClass), 'input', function(e) {
+    var target = e.target || e.srcElement;
+    if (target.value === "") {
+      searchMethod('');
+    }
+  });
+
+  return searchMethod;
+};
+
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports) {
+
+module.exports = function(list) {
+
+  // Add handlers
+  list.handlers.filterStart = list.handlers.filterStart || [];
+  list.handlers.filterComplete = list.handlers.filterComplete || [];
+
+  return function(filterFunction) {
+    list.trigger('filterStart');
+    list.i = 1; // Reset paging
+    list.reset.filter();
+    if (filterFunction === undefined) {
+      list.filtered = false;
+    } else {
+      list.filtered = true;
+      var is = list.items;
+      for (var i = 0, il = is.length; i < il; i++) {
+        var item = is[i];
+        if (filterFunction(item)) {
+          item.filtered = true;
+        } else {
+          item.filtered = false;
         }
       }
     }
-  }
-  return result;
+    list.update();
+    list.trigger('filterComplete');
+    return list.visibleItems;
+  };
+};
+
+
+/***/ }),
+/* 17 */
+/***/ (function(module, exports) {
+
+module.exports = function(list) {
+
+  var buttons = {
+    els: undefined,
+    clear: function() {
+      for (var i = 0, il = buttons.els.length; i < il; i++) {
+        list.utils.classes(buttons.els[i]).remove('asc');
+        list.utils.classes(buttons.els[i]).remove('desc');
+      }
+    },
+    getOrder: function(btn) {
+      var predefinedOrder = list.utils.getAttribute(btn, 'data-order');
+      if (predefinedOrder == "asc" || predefinedOrder == "desc") {
+        return predefinedOrder;
+      } else if (list.utils.classes(btn).has('desc')) {
+        return "asc";
+      } else if (list.utils.classes(btn).has('asc')) {
+        return "desc";
+      } else {
+        return "asc";
+      }
+    },
+    getInSensitive: function(btn, options) {
+      var insensitive = list.utils.getAttribute(btn, 'data-insensitive');
+      if (insensitive === "false") {
+        options.insensitive = false;
+      } else {
+        options.insensitive = true;
+      }
+    },
+    setOrder: function(options) {
+      for (var i = 0, il = buttons.els.length; i < il; i++) {
+        var btn = buttons.els[i];
+        if (list.utils.getAttribute(btn, 'data-sort') !== options.valueName) {
+          continue;
+        }
+        var predefinedOrder = list.utils.getAttribute(btn, 'data-order');
+        if (predefinedOrder == "asc" || predefinedOrder == "desc") {
+          if (predefinedOrder == options.order) {
+            list.utils.classes(btn).add(options.order);
+          }
+        } else {
+          list.utils.classes(btn).add(options.order);
+        }
+      }
+    }
+  };
+
+  var sort = function() {
+    list.trigger('sortStart');
+    var options = {};
+
+    var target = arguments[0].currentTarget || arguments[0].srcElement || undefined;
+
+    if (target) {
+      options.valueName = list.utils.getAttribute(target, 'data-sort');
+      buttons.getInSensitive(target, options);
+      options.order = buttons.getOrder(target);
+    } else {
+      options = arguments[1] || options;
+      options.valueName = arguments[0];
+      options.order = options.order || "asc";
+      options.insensitive = (typeof options.insensitive == "undefined") ? true : options.insensitive;
+    }
+
+    buttons.clear();
+    buttons.setOrder(options);
+
+
+    // caseInsensitive
+    // alphabet
+    var customSortFunction = (options.sortFunction || list.sortFunction || null),
+        multi = ((options.order === 'desc') ? -1 : 1),
+        sortFunction;
+
+    if (customSortFunction) {
+      sortFunction = function(itemA, itemB) {
+        return customSortFunction(itemA, itemB, options) * multi;
+      };
+    } else {
+      sortFunction = function(itemA, itemB) {
+        var sort = list.utils.naturalSort;
+        sort.alphabet = list.alphabet || options.alphabet || undefined;
+        if (!sort.alphabet && options.insensitive) {
+          sort = list.utils.naturalSort.caseInsensitive;
+        }
+        return sort(itemA.values()[options.valueName], itemB.values()[options.valueName]) * multi;
+      };
+    }
+
+    list.items.sort(sortFunction);
+    list.update();
+    list.trigger('sortComplete');
+  };
+
+  // Add handlers
+  list.handlers.sortStart = list.handlers.sortStart || [];
+  list.handlers.sortComplete = list.handlers.sortComplete || [];
+
+  buttons.els = list.utils.getByClass(list.listContainer, list.sortClass);
+  list.utils.events.bind(buttons.els, 'click', sort);
+  list.on('searchStart', buttons.clear);
+  list.on('filterStart', buttons.clear);
+
+  return sort;
 };
 
 
@@ -1511,118 +1599,73 @@ module.exports = function(el, attr) {
 /* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+
+var classes = __webpack_require__(1),
+  events = __webpack_require__(0),
+  extend = __webpack_require__(4),
+  toString = __webpack_require__(7),
+  getByClass = __webpack_require__(3),
+  fuzzy = __webpack_require__(19);
+
+module.exports = function(list, options) {
+  options = options || {};
+
+  options = extend({
+    location: 0,
+    distance: 100,
+    threshold: 0.4,
+    multiSearch: true,
+    searchClass: 'fuzzy-search'
+  }, options);
 
 
-var alphabet;
-var alphabetIndexMap;
-var alphabetIndexMapLength = 0;
 
-function isNumberCode(code) {
-  return code >= 48 && code <= 57;
-}
+  var fuzzySearch = {
+    search: function(searchString, columns) {
+      // Substract arguments from the searchString or put searchString as only argument
+      var searchArguments = options.multiSearch ? searchString.replace(/ +$/, '').split(/ +/) : [searchString];
 
-function naturalCompare(a, b) {
-  var lengthA = (a += '').length;
-  var lengthB = (b += '').length;
-  var aIndex = 0;
-  var bIndex = 0;
-
-  while (aIndex < lengthA && bIndex < lengthB) {
-    var charCodeA = a.charCodeAt(aIndex);
-    var charCodeB = b.charCodeAt(bIndex);
-
-    if (isNumberCode(charCodeA)) {
-      if (!isNumberCode(charCodeB)) {
-        return charCodeA - charCodeB;
+      for (var k = 0, kl = list.items.length; k < kl; k++) {
+        fuzzySearch.item(list.items[k], columns, searchArguments);
       }
-
-      var numStartA = aIndex;
-      var numStartB = bIndex;
-
-      while (charCodeA === 48 && ++numStartA < lengthA) {
-        charCodeA = a.charCodeAt(numStartA);
-      }
-      while (charCodeB === 48 && ++numStartB < lengthB) {
-        charCodeB = b.charCodeAt(numStartB);
-      }
-
-      var numEndA = numStartA;
-      var numEndB = numStartB;
-
-      while (numEndA < lengthA && isNumberCode(a.charCodeAt(numEndA))) {
-        ++numEndA;
-      }
-      while (numEndB < lengthB && isNumberCode(b.charCodeAt(numEndB))) {
-        ++numEndB;
-      }
-
-      var difference = numEndA - numStartA - numEndB + numStartB; // numA length - numB length
-      if (difference) {
-        return difference;
-      }
-
-      while (numStartA < numEndA) {
-        difference = a.charCodeAt(numStartA++) - b.charCodeAt(numStartB++);
-        if (difference) {
-          return difference;
+    },
+    item: function(item, columns, searchArguments) {
+      var found = true;
+      for(var i = 0; i < searchArguments.length; i++) {
+        var foundArgument = false;
+        for (var j = 0, jl = columns.length; j < jl; j++) {
+          if (fuzzySearch.values(item.values(), columns[j], searchArguments[i])) {
+            foundArgument = true;
+          }
+        }
+        if(!foundArgument) {
+          found = false;
         }
       }
+      item.found = found;
+    },
+    values: function(values, value, searchArgument) {
+      if (values.hasOwnProperty(value)) {
+        var text = toString(values[value]).toLowerCase();
 
-      aIndex = numEndA;
-      bIndex = numEndB;
-      continue;
-    }
-
-    if (charCodeA !== charCodeB) {
-      if (
-        charCodeA < alphabetIndexMapLength &&
-        charCodeB < alphabetIndexMapLength &&
-        alphabetIndexMap[charCodeA] !== -1 &&
-        alphabetIndexMap[charCodeB] !== -1
-      ) {
-        return alphabetIndexMap[charCodeA] - alphabetIndexMap[charCodeB];
+        if (fuzzy(text, searchArgument, options)) {
+          return true;
+        }
       }
-
-      return charCodeA - charCodeB;
+      return false;
     }
+  };
 
-    ++aIndex;
-    ++bIndex;
-  }
 
-  return lengthA - lengthB;
-}
+  events.bind(getByClass(list.listContainer, options.searchClass), 'keyup', function(e) {
+    var target = e.target || e.srcElement; // IE have srcElement
+    list.search(target.value, fuzzySearch.search);
+  });
 
-naturalCompare.caseInsensitive = naturalCompare.i = function(a, b) {
-  return naturalCompare(('' + a).toLowerCase(), ('' + b).toLowerCase());
+  return function(str, columns) {
+    list.search(str, columns, fuzzySearch.search);
+  };
 };
-
-Object.defineProperties(naturalCompare, {
-  alphabet: {
-    get: function() {
-      return alphabet;
-    },
-    set: function(value) {
-      alphabet = value;
-      alphabetIndexMap = [];
-      var i = 0;
-      if (alphabet) {
-        for (; i < alphabet.length; i++) {
-          alphabetIndexMap[alphabet.charCodeAt(i)] = i;
-        }
-      }
-      alphabetIndexMapLength = alphabetIndexMap.length;
-      for (i = 0; i < alphabetIndexMapLength; i++) {
-        if (alphabetIndexMap[i] === undefined) {
-          alphabetIndexMap[i] = -1;
-        }
-      }
-    },
-  },
-});
-
-module.exports = naturalCompare;
 
 
 /***/ }),

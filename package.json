@@ -13,7 +13,7 @@
   ],
   "author": {
     "name": "Jonny Strömberg",
-    "email": "jonny.stromberg@gmail.com>",
+    "email": "jonny.stromberg@gmail.com",
     "url": "http://javve.com"
   },
   "homepage": "http://listjs.com",
@@ -26,11 +26,12 @@
     "string-natural-compare": "^2.0.2"
   },
   "devDependencies": {
-    "jest": "^23.3",
-    "jquery": "^3.3.1",
-    "jshint": "^2.9.4",
-    "jshint-loader": "^0.8.4",
-    "webpack": "^3.12.0"
+    "jest": "^26.4.2",
+    "jquery": "^3.5.1",
+    "eslint": "^7.9.0",
+    "eslint-loader": "^4.0.2",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12"
   },
   "main": "src/index",
   "engines": {
@@ -51,7 +52,10 @@
   "jest": {
     "coverageDirectory": "./coverage/",
     "collectCoverage": true,
-    "collectCoverageFrom": ["src/*.js", "src/utils/*.js"],
+    "collectCoverageFrom": [
+      "src/*.js",
+      "src/utils/*.js"
+    ],
     "testURL": "http://localhost/"
   }
 }

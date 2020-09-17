@@ -1,4 +1,5 @@
 const webpack = require('webpack'),
+      TerserPlugin = require('terser-webpack-plugin');
       PACKAGE = require('./package.json');
 
 module.exports = {
@@ -13,20 +14,24 @@ module.exports = {
   },
   module: {
     rules: [{
-      enforce: 'pre',
+//      enforce: 'pre',
       test: /\.js$/,
       exclude: /(node_modules|src\/utils\/extend\.js)/,
-      loader: "jshint-loader"
+      loader: "eslint-loader"
     }]
   },
   devServer: {
     inline: true
   },
+  optimization: {
+    minimize: true,
+    minimizer: [
+      new TerserPlugin({
+        include: /\.min\.js$/,
+      }),
+    ],
+  },
   plugins: [
-    new webpack.optimize.UglifyJsPlugin({
-      include: /\.min\.js$/,
-      minimize: true
-    }),
     new webpack.BannerPlugin({
       banner: 'List.js v' + PACKAGE.version + ' (' + PACKAGE.homepage + ') by ' + PACKAGE.author.name + ' (' + PACKAGE.author.url + ')'
     })
