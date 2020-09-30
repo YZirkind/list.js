@@ -61,5 +61,5 @@ exports.debounce = function(fn, wait, immediate){
 		clearTimeout(timeout);
 		timeout = setTimeout(later, wait);
 		if (callNow) fn.apply(context, args);
-	} : fn;  
+	} : fn;
 };
