@@ -80,11 +80,14 @@ module.exports = function(list) {
     } else {
       sortFunction = function(itemA, itemB) {
         var sort = list.utils.naturalSort;
-        sort.alphabet = list.alphabet || options.alphabet || undefined;
-        if (!sort.alphabet && options.insensitive) {
-          sort = list.utils.naturalSort.caseInsensitive;
-        }
-        return sort(itemA.values()[options.valueName], itemB.values()[options.valueName]) * multi;
+        let alphabet = list.alphabet || options.alphabet || undefined;
+        let caseInsensitive = !sort.alphabet && options.insensitive;
+        return sort(String(itemA.values()[options.valueName]), String(itemB.values()[options.valueName]),
+          {
+            caseInsensitive: caseInsensitive,
+            alphabet: alphabet
+          }
+        ) * multi;
       };
     }
 
