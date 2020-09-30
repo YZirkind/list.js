@@ -1,4 +1,4 @@
-/*! List.js v1.5.1 (http://listjs.com) by Jonny Strömberg (http://javve.com) */
+/*! List.js v1.5.2 (http://listjs.com) by Jonny Strömberg (http://javve.com) */
 var List =
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
@@ -127,6 +127,33 @@ exports.unbind = function(el, type, fn, capture){
   for ( var i = 0; i < el.length; i++ ) {
     el[i][unbind](prefix + type, fn, capture || false);
   }
+};
+
+/**
+ * Returns a function, that, as long as it continues to be invoked, will not
+ * be triggered. The function will be called after it stops being called for
+ * `wait` milliseconds. If `immediate` is true, trigger the function on the
+ * leading edge, instead of the trailing.
+ *
+ * @param {Function} fn
+ * @param {Integer} wait
+ * @param {Boolean} immediate
+ * @api public
+ */
+
+exports.debounce = function(fn, wait, immediate){
+  var timeout;
+  return wait ? function() {
+		var context = this, args = arguments;
+		var later = function() {
+			timeout = null;
+			if (!immediate) fn.apply(context, args);
+		};
+		var callNow = immediate && !timeout;
+		clearTimeout(timeout);
+		timeout = setTimeout(later, wait);
+		if (callNow) fn.apply(context, args);
+	} : fn;
 };
 
 
@@ -335,6 +362,7 @@ module.exports = function(id, options, values) {
       self.searched       = false;
       self.filtered       = false;
       self.searchColumns  = undefined;
+      self.searchDelay    = 0;
       self.handlers       = { 'updated': [] };
       self.valueNames     = [];
       self.utils          = {
@@ -800,41 +828,63 @@ module.exports = function(list) {
 "use strict";
 
 
-var alphabet;
-var alphabetIndexMap;
-var alphabetIndexMapLength = 0;
+const defaultAlphabetIndexMap = [];
 
 function isNumberCode(code) {
-  return code >= 48 && code <= 57;
+  return code >= 48/* '0' */ && code <= 57/* '9' */;
 }
 
-function naturalCompare(a, b) {
-  var lengthA = (a += '').length;
-  var lengthB = (b += '').length;
-  var aIndex = 0;
-  var bIndex = 0;
+function naturalCompare(a, b, opts) {
+  if (typeof a !== 'string') {
+    throw new TypeError(`The first argument must be a string. Received type '${typeof a}'`);
+  }
+  if (typeof b !== 'string') {
+    throw new TypeError(`The second argument must be a string. Received type '${typeof b}'`);
+  }
 
-  while (aIndex < lengthA && bIndex < lengthB) {
-    var charCodeA = a.charCodeAt(aIndex);
-    var charCodeB = b.charCodeAt(bIndex);
+  const lengthA = a.length;
+  const lengthB = b.length;
+  let indexA = 0;
+  let indexB = 0;
+  let alphabetIndexMap = defaultAlphabetIndexMap;
+  let firstDifferenceInLeadingZeros = 0;
+
+  if (opts) {
+    if (opts.caseInsensitive) {
+      a = a.toLowerCase();
+      b = b.toLowerCase();
+    }
+
+    if (opts.alphabet) {
+      alphabetIndexMap = buildAlphabetIndexMap(opts.alphabet);
+    }
+  }
+
+  while (indexA < lengthA && indexB < lengthB) {
+    let charCodeA = a.charCodeAt(indexA);
+    let charCodeB = b.charCodeAt(indexB);
 
     if (isNumberCode(charCodeA)) {
       if (!isNumberCode(charCodeB)) {
         return charCodeA - charCodeB;
       }
 
-      var numStartA = aIndex;
-      var numStartB = bIndex;
+      let numStartA = indexA;
+      let numStartB = indexB;
 
-      while (charCodeA === 48 && ++numStartA < lengthA) {
+      while (charCodeA === 48/* '0' */ && ++numStartA < lengthA) {
         charCodeA = a.charCodeAt(numStartA);
       }
-      while (charCodeB === 48 && ++numStartB < lengthB) {
+      while (charCodeB === 48/* '0' */ && ++numStartB < lengthB) {
         charCodeB = b.charCodeAt(numStartB);
       }
 
-      var numEndA = numStartA;
-      var numEndB = numStartB;
+      if (numStartA !== numStartB && firstDifferenceInLeadingZeros === 0) {
+        firstDifferenceInLeadingZeros = numStartA - numStartB;
+      }
+
+      let numEndA = numStartA;
+      let numEndB = numStartB;
 
       while (numEndA < lengthA && isNumberCode(a.charCodeAt(numEndA))) {
         ++numEndA;
@@ -843,27 +893,27 @@ function naturalCompare(a, b) {
         ++numEndB;
       }
 
-      var difference = numEndA - numStartA - numEndB + numStartB; // numA length - numB length
-      if (difference) {
+      let difference = numEndA - numStartA - numEndB + numStartB; // numA length - numB length
+      if (difference !== 0) {
         return difference;
       }
 
       while (numStartA < numEndA) {
         difference = a.charCodeAt(numStartA++) - b.charCodeAt(numStartB++);
-        if (difference) {
+        if (difference !== 0) {
           return difference;
         }
       }
 
-      aIndex = numEndA;
-      bIndex = numEndB;
+      indexA = numEndA;
+      indexB = numEndB;
       continue;
     }
 
     if (charCodeA !== charCodeB) {
       if (
-        charCodeA < alphabetIndexMapLength &&
-        charCodeB < alphabetIndexMapLength &&
+        charCodeA < alphabetIndexMap.length &&
+        charCodeB < alphabetIndexMap.length &&
         alphabetIndexMap[charCodeA] !== -1 &&
         alphabetIndexMap[charCodeB] !== -1
       ) {
@@ -873,53 +923,46 @@ function naturalCompare(a, b) {
       return charCodeA - charCodeB;
     }
 
-    ++aIndex;
-    ++bIndex;
+    ++indexA;
+    ++indexB;
   }
 
-  if (aIndex >= lengthA && bIndex < lengthB && lengthA >= lengthB) {
-    return -1;
-  }
-
-  if (bIndex >= lengthB && aIndex < lengthA && lengthB >= lengthA) {
+  if (indexA < lengthA) { // `b` is a substring of `a`
     return 1;
   }
 
-  return lengthA - lengthB;
+  if (indexB < lengthB) { // `a` is a substring of `b`
+    return -1;
+  }
+
+  return firstDifferenceInLeadingZeros;
 }
 
-naturalCompare.caseInsensitive = naturalCompare.i = function(a, b) {
-  return naturalCompare(('' + a).toLowerCase(), ('' + b).toLowerCase());
-};
+const alphabetIndexMapCache = {};
 
-Object.defineProperties(naturalCompare, {
-  alphabet: {
-    get: function() {
-      return alphabet;
-    },
+function buildAlphabetIndexMap(alphabet) {
+  const existingMap = alphabetIndexMapCache[alphabet];
+  if (existingMap !== undefined) {
+    return existingMap;
+  }
 
-    set: function(value) {
-      alphabet = value;
-      alphabetIndexMap = [];
+  const indexMap = [];
+  const maxCharCode = alphabet.split('').reduce((maxCode, char) => {
+    return Math.max(maxCode, char.charCodeAt(0));
+  }, 0);
 
-      var i = 0;
+  for (let i = 0; i <= maxCharCode; i++) {
+    indexMap.push(-1);
+  }
 
-      if (alphabet) {
-        for (; i < alphabet.length; i++) {
-          alphabetIndexMap[alphabet.charCodeAt(i)] = i;
-        }
-      }
+  for (let i = 0; i < alphabet.length; i++) {
+    indexMap[alphabet.charCodeAt(i)] = i;
+  }
 
-      alphabetIndexMapLength = alphabetIndexMap.length;
+  alphabetIndexMapCache[alphabet] = indexMap;
 
-      for (i = 0; i < alphabetIndexMapLength; i++) {
-        if (alphabetIndexMap[i] === undefined) {
-          alphabetIndexMap[i] = -1;
-        }
-      }
-    },
-  },
-});
+  return indexMap;
+}
 
 module.exports = naturalCompare;
 
@@ -1440,13 +1483,13 @@ module.exports = function(list) {
   list.handlers.searchStart = list.handlers.searchStart || [];
   list.handlers.searchComplete = list.handlers.searchComplete || [];
 
-  list.utils.events.bind(list.utils.getByClass(list.listContainer, list.searchClass), 'keyup', function(e) {
+  list.utils.events.bind(list.utils.getByClass(list.listContainer, list.searchClass), 'keyup', list.utils.events.debounce(function(e) {
     var target = e.target || e.srcElement, // IE have srcElement
       alreadyCleared = (target.value === "" && !list.searched);
     if (!alreadyCleared) { // If oninput already have resetted the list, do nothing
       searchMethod(target.value);
     }
-  });
+  }, list.searchDelay));
 
   // Used to detect click on HTML5 clear button
   list.utils.events.bind(list.utils.getByClass(list.listContainer, list.searchClass), 'input', function(e) {
@@ -1581,11 +1624,14 @@ module.exports = function(list) {
     } else {
       sortFunction = function(itemA, itemB) {
         var sort = list.utils.naturalSort;
-        sort.alphabet = list.alphabet || options.alphabet || undefined;
-        if (!sort.alphabet && options.insensitive) {
-          sort = list.utils.naturalSort.caseInsensitive;
-        }
-        return sort(itemA.values()[options.valueName], itemB.values()[options.valueName]) * multi;
+        let alphabet = list.alphabet || options.alphabet || undefined;
+        let caseInsensitive = !sort.alphabet && options.insensitive;
+        return sort(String(itemA.values()[options.valueName]), String(itemB.values()[options.valueName]),
+          {
+            caseInsensitive: caseInsensitive,
+            alphabet: alphabet
+          }
+        ) * multi;
       };
     }
 
@@ -1669,10 +1715,10 @@ module.exports = function(list, options) {
   };
 
 
-  events.bind(getByClass(list.listContainer, options.searchClass), 'keyup', function(e) {
+  events.bind(getByClass(list.listContainer, options.searchClass), 'keyup', list.utils.events.debounce(function(e) {
     var target = e.target || e.srcElement; // IE have srcElement
     list.search(target.value, fuzzySearch.search);
-  });
+  }, list.searchDelay));
 
   return function(str, columns) {
     list.search(str, columns, fuzzySearch.search);
