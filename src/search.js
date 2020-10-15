@@ -1,5 +1,6 @@
 const REGEX_CHARACTERS_PATTERN = /[-[\]{}()*+?.,\\^$|#]/g;
 const REGEX_SPLIT_QUOTES = /"([^"]+)"/;
+const REGEX_UNESCAPE = /\\/g;
 const REGEX_SPLIT_SPACE = /\s+/;
 
 module.exports = function(list) {
@@ -51,7 +52,7 @@ module.exports = function(list) {
     list: function() {
       // Extract quoted phrases "word1 word2" from original searchString
       // searchString is converted to lowercase by List.js
-      var words = [], phrase, ss = searchPattern.source;
+      var words = [], phrase, ss = searchPattern.source.replace(REGEX_UNESCAPE, '');
       while ((phrase = ss.match(REGEX_SPLIT_QUOTES)) !== null) {
         words.push(phrase[1]);
         ss = ss.substring(0,phrase.index) + ss.substring(phrase.index+phrase[0].length);
