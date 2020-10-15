@@ -46,11 +46,11 @@ var Templater = function(list) {
     } else if (/<tr[\s>]/g.exec(item)) {
       var tbody = document.createElement('tbody');
       tbody.innerHTML = item;
-      return tbody.firstChild;
+      return tbody.firstElementChild;
     } else if (item.indexOf("<") !== -1) {
       var div = document.createElement('div');
       div.innerHTML = item;
-      return div.firstChild;
+      return div.firstElementChild;
     } else {
       var source = document.getElementById(list.item);
       if (source) {
