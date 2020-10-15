@@ -3,12 +3,11 @@ const webpack = require('webpack'),
       PACKAGE = require('./package.json');
 
 module.exports = {
+  mode: 'production',
   entry: {
-    list: './src/index.js',
     "list.min": './src/index.js'
   },
   output: {
-    path: __dirname + '/dist',
     filename: "[name].js",
     library: 'List'
   },
@@ -28,12 +27,13 @@ module.exports = {
     minimizer: [
       new TerserPlugin({
         include: /\.min\.js$/,
+        extractComments: false,
       }),
     ],
   },
   plugins: [
     new webpack.BannerPlugin({
-      banner: 'List.js v' + PACKAGE.version + ' (' + PACKAGE.homepage + ') by ' + PACKAGE.author.name + ' (' + PACKAGE.author.url + ')'
+      banner: `List.js v${PACKAGE.version} (${PACKAGE.homepage}) by ${PACKAGE.author.name} (${PACKAGE.author.url})`
     })
   ]
 };
