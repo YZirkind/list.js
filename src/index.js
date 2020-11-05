@@ -52,7 +52,7 @@ module.exports = function(id, options, values) {
 
       self.parse        = require('./parse')(self);
       self.templater    = require('./templater')(self);
-      self.search       = require('./search')(self);
+      self.search       = require('./search')(self, options.search);
       self.filter       = require('./filter')(self);
       self.sort         = require('./sort')(self);
       self.fuzzySearch  = require('./fuzzy-search')(self, options.fuzzySearch);

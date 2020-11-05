@@ -3,7 +3,9 @@ const REGEX_SPLIT_QUOTES = /"([^"]+)"/;
 const REGEX_UNESCAPE = /\\/g;
 const REGEX_SPLIT_SPACE = /\s+/;
 
-module.exports = function(list) {
+module.exports = function(list, options) {
+  options = options || {};
+
   var item,
     text,
     columns,
@@ -14,7 +16,7 @@ module.exports = function(list) {
     resetList: function() {
       list.i = 1;
       list.templater.clear();
-      customSearch = undefined;
+      customSearch = options.customSearch || undefined;
     },
     setOptions: function(args) {
       if (args.length == 2 && args[1] instanceof Array) {
