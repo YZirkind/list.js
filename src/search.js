@@ -6,9 +6,7 @@ const REGEX_SPLIT_SPACE = /\s+/;
 module.exports = function(list, options) {
   options = options || {};
 
-  var item,
-    text,
-    columns,
+  var columns,
     searchPattern,
     customSearch;
 
