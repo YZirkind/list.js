@@ -34,10 +34,8 @@ module.exports = function(list, options) {
       }
     },
     setSearchString: function(s) {
-      console.log(s);
       s = list.utils.toString(s).toLowerCase();
       searchString = s;
-      console.log(searchString);
     },
     toArray: function(values) {
       var tmpColumn = [];
