@@ -68,6 +68,11 @@ module.exports = function(list, options) {
             var column = columns[j];
             if (values.hasOwnProperty(column) && values[column] !== undefined && values[column] !== null) {
               var text = (typeof values[column] !== 'string') ? values[column].toString() : values[column];
+              // begin custom change - convert HTML entities to Unicode characters
+              if ((/<\/?[a-z][\s\S]*>/iu).test(text)) {
+                text = new DOMParser().parseFromString(text, 'text/html').querySelector('*').textContent;
+              }
+              // end custom change - convert HTML entities to Unicode characters
               if (text.toLowerCase().indexOf(words[i]) !== -1) {
                 // word found, so no need to check it against any other columns
                 word_found = true;
