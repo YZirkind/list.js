@@ -1,13 +1,11 @@
-const REGEX_CHARACTERS_PATTERN = /[-[\]{}()*+?.,\\^$|#]/g;
 const REGEX_SPLIT_QUOTES = /"([^"]+)"/;
-const REGEX_UNESCAPE = /\\/g;
 const REGEX_SPLIT_SPACE = /\s+/;
 
 module.exports = function(list, options) {
   options = options || {};
 
   var columns,
-    searchPattern,
+    searchString,
     customSearch;
 
   var prepare = {
@@ -35,10 +33,11 @@ module.exports = function(list, options) {
         columns = (list.searchColumns === undefined) ? prepare.toArray(list.items[0].values()) : list.searchColumns;
       }
     },
-    setSearchPattern: function(s) {
+    setSearchString: function(s) {
+      console.log(s);
       s = list.utils.toString(s).toLowerCase();
-      s = s.replace(REGEX_CHARACTERS_PATTERN, "\\$&"); // Escape regular expression characters
-      searchPattern = s ? new RegExp(s) : '';
+      searchString = s;
+      console.log(searchString);
     },
     toArray: function(values) {
       var tmpColumn = [];
@@ -52,7 +51,7 @@ module.exports = function(list, options) {
     list: function() {
       // Extract quoted phrases "word1 word2" from original searchString
       // searchString is converted to lowercase by List.js
-      var words = [], phrase, ss = searchPattern.source.replace(REGEX_UNESCAPE, '');
+      var words = [], phrase, ss = searchString;
       while ((phrase = ss.match(REGEX_SPLIT_QUOTES)) !== null) {
         words.push(phrase[1]);
         ss = ss.substring(0,phrase.index) + ss.substring(phrase.index+phrase[0].length);
@@ -95,16 +94,16 @@ module.exports = function(list, options) {
     list.trigger('searchStart');
 
     prepare.resetList();
-    prepare.setSearchPattern(str);
+    prepare.setSearchString(str);
     prepare.setOptions(arguments); // str, cols|searchFunction, searchFunction
     prepare.setColumns();
 
-    if (!searchPattern) {
+    if (!searchString ) {
       search.reset();
     } else {
       list.searched = true;
       if (customSearch) {
-        customSearch(searchPattern.source, columns);
+        customSearch(searchString, columns);
       } else {
         search.list();
       }
